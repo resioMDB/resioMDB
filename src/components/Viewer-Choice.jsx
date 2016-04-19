@@ -6,8 +6,8 @@ class Choice extends React.Component {
 
 //This method takes in the question ID (qIdentifier) and choice (choice) that the user selected
 //and prepares the data that'll be sent over the socket back to the server.
-  submitAnswer(qIdentifier, choice, cIdentifier) {
-    let response = JSON.stringify({q: qIdentifier, choice: choice, c: cIdentifier, allVotes: localStorage["changethis!!"]});
+  submitAnswer(qIdentifier, choice) {
+    let response = JSON.stringify({q: qIdentifier, choice: choice, allVotes: localStorage["changethis!!"]});
     socket.emit('viewerAnswer', response);
   }
   //In our render function, we check the question type. If thumbs, we populate with the Fontawesome thumb icon.
@@ -19,7 +19,7 @@ class Choice extends React.Component {
     if(this.props.qType === 'multiple') {
       return (
         <div>
-          <button className="btn btn-default res-btn" onClick={(event) => this.submitAnswer(this.props.qIdentifier,this.props.qChoice, this.props.cIdentifier)}>{this.props.qChoice}</button>
+          <button className="btn btn-default res-btn" onClick={(event) => this.submitAnswer(this.props.qIdentifier,this.props.qChoice)}>{this.props.qChoice}</button>
         </div>
       );
     }

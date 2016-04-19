@@ -36,30 +36,27 @@ app.get('/client/bundle.js', (req, res) => {
 io.on('connection', socket => {
   socket.on('viewerAnswer', data => {
 
-    io.emit('serverResponse', data);
-
+    // dataObj = {q: question index, choice: new choice {string},
+    //  allVotes: stringified array from local storage}
     var dataObj = JSON.parse(data);
-    var votes = JSON.parse(dataObj.allVotes);
-    // find location of question in index
-    var choiceInArr = votes[dataObj.q];
 
-    // first choice
-    if(!choiceInArr) {
-      // need to emit to local storage to change value in index
-      // change choice value at question index
-      choiceInArr = dataObj.c;
-      // need to emit to present to check graph
-      votes
-      io.emit('updateLS', votes);
-    }else if(choiceInArr !== dataObj.c) {
-        choiceInArr = dataObj.c;
-      io.emit('updateLS', choiceInArr);
+    var presenterObj = {
+      q: dataObj.q,
+      choice: dataObj.choice // new choice
+    }
+    //  parse allVotes into an array
+    //  the array index correspond to the question order on page
+    var votes = JSON.parse(dataObj.allVotes);
+
+    if (votes[dataObj.q] === dataObj.choice) {
+      return;
+    } else if (votes[dataObj.q] !== null) {
+      presenterObj.oldChoice = votes[dataObj.q];
     }
 
-    console.log((JSON.parse(data)));
-    console.log(JSON.parse((JSON.parse(data).c)));
-
-    io.emit('updateLS', JSON.stringify([null, null, null, 2]));
+    votes[dataObj.q] = dataObj.choice;
+    io.emit('updatePresenter', JSON.stringify(presenterObj));
+    io.emit('updateLS', JSON.stringify(votes));
   });
 });
 
