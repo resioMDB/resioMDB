@@ -22,7 +22,7 @@ class Dashboard extends React.Component{
       self.setState(self.state);
     });
   }
-  
+
   //make a call to the server to grab the questions
   //set those questions as the state and send them down to the next component
   componentWillMount() {

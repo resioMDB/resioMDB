@@ -35,7 +35,31 @@ app.get('/client/bundle.js', (req, res) => {
 //then the server emits the data via the 'serverResponse' event, which is heard by Presenter-Dashboard.jsx
 io.on('connection', socket => {
   socket.on('viewerAnswer', data => {
+
     io.emit('serverResponse', data);
+
+    var dataObj = JSON.parse(data);
+    var votes = JSON.parse(dataObj.allVotes);
+    // find location of question in index
+    var choiceInArr = votes[dataObj.q];
+
+    // first choice
+    if(!choiceInArr) {
+      // need to emit to local storage to change value in index
+      // change choice value at question index
+      choiceInArr = dataObj.c;
+      // need to emit to present to check graph
+      votes
+      io.emit('updateLS', votes);
+    }else if(choiceInArr !== dataObj.c) {
+        choiceInArr = dataObj.c;
+      io.emit('updateLS', choiceInArr);
+    }
+
+    console.log((JSON.parse(data)));
+    console.log(JSON.parse((JSON.parse(data).c)));
+
+    io.emit('updateLS', JSON.stringify([null, null, null, 2]));
   });
 });
 
