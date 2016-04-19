@@ -35,7 +35,28 @@ app.get('/client/bundle.js', (req, res) => {
 //then the server emits the data via the 'serverResponse' event, which is heard by Presenter-Dashboard.jsx
 io.on('connection', socket => {
   socket.on('viewerAnswer', data => {
-    io.emit('serverResponse', data);
+
+    // dataObj = {q: question index, choice: new choice {string},
+    //  allVotes: stringified array from local storage}
+    var dataObj = JSON.parse(data);
+
+    var presenterObj = {
+      q: dataObj.q,
+      choice: dataObj.choice // new choice
+    }
+    //  parse allVotes into an array
+    //  the array index correspond to the question order on page
+    var votes = JSON.parse(dataObj.allVotes);
+
+    if (votes[dataObj.q] === dataObj.choice) {
+      return;
+    } else if (votes[dataObj.q] !== null) {
+      presenterObj.oldChoice = votes[dataObj.q];
+    }
+
+    votes[dataObj.q] = dataObj.choice;
+    io.emit('updatePresenter', JSON.stringify(presenterObj));
+    io.emit('updateLS', JSON.stringify(votes));
   });
 });
 
