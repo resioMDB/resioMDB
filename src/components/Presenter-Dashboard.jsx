@@ -15,14 +15,19 @@ class Dashboard extends React.Component{
     //then use that data to traverse the data structure and change the state
     //see server.js for the structure of the data
     var self = this;
-    socket.on('serverResponse', function(data) {
+    socket.on('updatePresenter', function(data) { // newArr with choice,
       var parsedData = JSON.parse(data);
-      var choiceMade = parsedData.choice;
-      self.state.questions[parsedData.q].choices[0][choiceMade]++;
+      var newChoice = parsedData.choice;
+
+      if (parsedData.oldChoice) {
+        self.state.questions[parsedData.q].choices[0][parsedData.oldChoice]--;
+      }
+      self.state.questions[parsedData.q].choices[0][newChoice]++;
+      
       self.setState(self.state);
     });
   }
-  
+
   //make a call to the server to grab the questions
   //set those questions as the state and send them down to the next component
   componentWillMount() {
