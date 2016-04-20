@@ -5,23 +5,21 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 mongoose.connect('mongodb://localhost/resiodb');
-mongoose.connection.once('open', function() {
-	console.log('Connected with resiodb')
-});
+//mongoose.connection.once('open', function() {
+//	console.log('Connected with resiodb')
+//});
 //create an instance of an express application
 const app = express();
 
 //our express app will act as a handler to an http server - notice '.Server' method
 const http = require('http').Server(app); // eslint-disable-line new-cap
 
-/*
-	TO DO:
-	+ import the questions Schema
-	--GIVING ME CONNECTION OPEN ERROR?--
-	+ then input question object array into questionschema example
-	+ send this info to '/api/questions' with res.json(createdSchema);
-*/
-// const QuestionSchema = require('./modules/questionSchema');
+//Don't need this? :const QuestionSchema = require('./modules/questionSchema');
+
+const pollRoute = require('./Routes/pollRoute');
+
+app.use('/polls', pollRoute);
+
 
 //require in socket.io
 //the html page also needs a script tag - see client/index.html
