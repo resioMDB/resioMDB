@@ -42,7 +42,7 @@ class Dashboard extends React.Component{
   render () {
     return (
       <div>
-        <h1 className="go-local">Go to localhost:3000/#/viewer?id={this.props.location.query.id}</h1>
+        <h1 className="go-local">Go to 192.168.1.7:3000/#/viewer?id={this.props.location.query.id}</h1>
         <h1 className="go-local">Poll your votes:</h1>
         <Graphs questions={this.state.questions} />
       </div>
