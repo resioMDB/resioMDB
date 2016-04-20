@@ -38,8 +38,8 @@ io.on('connection', socket => {
 
     // dataObj = {q: question index, choice: new choice {string},
     //  allVotes: stringified array from local storage}
-    var dataObj = JSON.parse(data);
 
+    var dataObj = JSON.parse(data);
     var presenterObj = {
       q: dataObj.q,
       choice: dataObj.choice // new choice
@@ -56,7 +56,8 @@ io.on('connection', socket => {
 
     votes[dataObj.q] = dataObj.choice;
     io.emit('updatePresenter', JSON.stringify(presenterObj));
-    io.emit('updateLS', JSON.stringify(votes));
+    socket.emit('updateLS', JSON.stringify(votes));
+
   });
 });
 

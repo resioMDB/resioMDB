@@ -12,10 +12,18 @@ class QuestionApp extends React.Component {
     super(props);
     this.state = { questions: [] };
 
-    socket.on('updateLS', function(newChoiceArr) {
-      var hashKeyToBe = "changethis!!";
-      localStorage.setItem(hashKeyToBe, newChoiceArr);
-    });
+    // Doesn't work here!!!
+    // socket.on('updateLS', function(newChoiceArr) {
+    //   var hashKeyToBe = "changethis!!";
+    //   localStorage.setItem(hashKeyToBe, newChoiceArr);
+    // });
+  }
+
+
+  submitAnswer(qIdentifier, choice) {
+    console.log("called in QApp with", qIdentifier, choice);
+    let response = JSON.stringify({q: qIdentifier, choice: choice, allVotes: localStorage["changethis!!"]});
+    socket.emit('viewerAnswer', response);
   }
 
   //  Store an array in the voter's local storage. Each index of the array corresponds to the index of a question.
@@ -46,7 +54,7 @@ class QuestionApp extends React.Component {
   render() {
     return (
       <div id="">
-        <Questions questionState={this.state.questions} />
+        <Questions questionState={this.state.questions}/>
       </div>
     );
   }
