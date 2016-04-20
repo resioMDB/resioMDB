@@ -12,22 +12,21 @@ import { BarChart, PieChart } from 'react-d3';
 class CreateGraph extends React.Component{
   constructor(props) {
     super(props);
-    this.state = {questions: [], queuedQuestions: [], showComponents: true}
+    this.state = {questions: [], queuedQuestions: [], showComponents: true, id: ''}
 
     this.getFormData = this.getFormData.bind(this);
     this.publishCharts = this.publishCharts.bind(this);
   }
 
   getFormData(data) {
-
-
     this.setState({queuedQuestions : this.state.queuedQuestions.concat(data)});
   }
 
   publishCharts() {
-    console.log(this.state.queuedQuestions);
-    axios.post('/polls/create', this.state.queuedQuestions);
-    // this.setState({questions: this.state.queuedQuestions, showComponents: false})
+    axios.post('/polls/create', this.state.queuedQuestions).then( (response) => {
+      this.setState({id: response.data._id});
+    });
+    this.setState({questions: this.state.queuedQuestions, showComponents: false})
   }
 
   render () {
@@ -36,8 +35,8 @@ class CreateGraph extends React.Component{
     let testId = 'dmn12d92'
     return (
       <div id='graphText'>
-        {!this.state.showComponents ? <h1 className="display-1">Polls:</h1> : ''}
-        {this.state.showComponents ? <Link to={{ pathname: 'dash', query: { id: '5717f6131d38a8c33dcd2d4d' } }}><button onClick={this.publishCharts} className="btn">Publish Charts</button></Link>: ''}
+        {!this.state.showComponents ? <Link to={{ pathname: 'dash', query: { id: this.state.id } }}><button className="btn go-charts">Go to Charts!</button></Link> : ''}
+        {this.state.showComponents ? <button onClick={this.publishCharts} className="btn">Publish Charts</button>: ''}
         {this.state.showComponents ?  <h1 className="display-1">Select and Create Your Poll Here.</h1> : ''}
         {this.state.showComponents ? <CreateComponent getData = {this.getFormData}/> : ''}
         {this.state.showComponents ? <CreateComponent getData = {this.getFormData}/> : ''}
