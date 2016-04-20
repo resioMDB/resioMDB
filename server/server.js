@@ -78,7 +78,7 @@ var database = {
   [
     { cType: 'bar',
       question: 'Who has the coolest scratch project?',
-      choices: [{ Alex: 0, Daniel: 0, Dave: 0, Carlos: 0 }],
+      choices: [{ Brandon: 0, Danny: 0, Masha: 0}],
       qType: 'multiple'
     },
     { cType: 'pie',
