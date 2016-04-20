@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import QuestionContainer from './Viewer-QuestionContainer.jsx';
+import { Link } from 'react-router';
 
 //This component maps over all of the questions in the data returned from the server.
 class Questions extends React.Component{
@@ -15,7 +16,7 @@ class Questions extends React.Component{
       <div id="">
         {questions}
         <div className="text-center col-md-4 col-md-offset-4">
-          <a href="/#/thanks"><button className="btn start">Finish Poll</button></a>
+          <Link to="/thanks"><button className="btn start">Finish Poll</button></Link>
         </div>
       </div>
     );

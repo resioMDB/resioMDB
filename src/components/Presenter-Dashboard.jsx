@@ -6,7 +6,6 @@ class Dashboard extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state = {questions: []}
 
     //needed to retain the value of 'this' because it's within the socket callback
     //we change a value in the 'choices' array based on an event called 'serverResponse'
@@ -39,11 +38,9 @@ class Dashboard extends React.Component{
   }
 
   render () {
-
     return (
       <div>
-      <h5>Showing Responses</h5>
-      <Graphs questions={this.state.questions} />
+        <Graphs questions={this.props.questions} />
       </div>
     );
   }

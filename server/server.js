@@ -30,6 +30,8 @@ const QuestionSchema = require('./modules/questionSchema');
 //this triggers the 'connection' event that io listens for below
 const io = require('socket.io')(http);
 
+const mockDB = require('./mockDB');
+
 app.use(express.static('client'));
 
 app.get('/', (req, res) => {
@@ -52,8 +54,8 @@ io.on('connection', socket => {
 
     // dataObj = {q: question index, choice: new choice {string},
     //  allVotes: stringified array from local storage}
-    var dataObj = JSON.parse(data);
 
+    var dataObj = JSON.parse(data);
     var presenterObj = {
       q: dataObj.q,
       choice: dataObj.choice // new choice
@@ -70,7 +72,14 @@ io.on('connection', socket => {
 
     votes[dataObj.q] = dataObj.choice;
     io.emit('updatePresenter', JSON.stringify(presenterObj));
-    io.emit('updateLS', JSON.stringify(votes));
+    socket.emit('updateLS', JSON.stringify(votes));
+
+  });
+
+  socket.on('getQuestions', (hash) => {
+    console.log("i've received hash:", hash);
+    console.log("i'm going to send:", mockDB[hash]);
+    socket.emit('sendQuestions', mockDB[hash]);
   });
 });
 

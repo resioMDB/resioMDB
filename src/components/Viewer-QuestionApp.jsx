@@ -10,12 +10,31 @@ class QuestionApp extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { questions: [] };
+    this.state = {
+      questions: [],
+      hash: this.props.routes[0].hash
+    };
 
-    socket.on('updateLS', function(newChoiceArr) {
-      var hashKeyToBe = "changethis!!";
-      localStorage.setItem(hashKeyToBe, newChoiceArr);
+    var self = this;
+    socket.on('sendQuestions', (data) => {
+      console.log("i've received questions:", data);
+      self.setState({questions: data});
+      self.setInitialLS(data.questions.length);
     });
+
+
+    // Doesn't work here!!!
+    // socket.on('updateLS', function(newChoiceArr) {
+    //   var hashKeyToBe = "changethis!!";
+    //   localStorage.setItem(hashKeyToBe, newChoiceArr);
+    // });
+  }
+
+
+  submitAnswer(qIdentifier, choice) {
+    console.log("called in QApp with", qIdentifier, choice);
+    let response = JSON.stringify({q: qIdentifier, choice: choice, allVotes: localStorage["changethis!!"]});
+    socket.emit('viewerAnswer', response);
   }
 
   //  Store an array in the voter's local storage. Each index of the array corresponds to the index of a question.
@@ -28,25 +47,44 @@ class QuestionApp extends React.Component {
     localStorage.setItem(hashKeyToBe, JSON.stringify(new Array(length)));
   }
 
-  //Grabs questions and answer choices from server via an Ajax request and then sets the state.
-  componentWillMount(){
-    $.ajax('/api/questions').done( data => {
-        this.setState(data);
-        /*
-        localStorage takes a key and a value. Both the key and value are strings.
-        Data is an object but string coercion happens in order to adapt to situation,
-        and in this case it worked.
-        localStorage.setItem("hashKeyToBe", data.questions.length);
+   componentWillMount(){
+     console.log(this);
+     console.log("where i'm looking", this.props.routes[0].hash);
+     console.log("trying to emit", this.state.hash);
+     socket.emit('getQuestions', this.state.hash);
+   }
 
-        */
-        this.setInitialLS(data.questions.length);
-    });
-  }
+         /*
+         localStorage takes a key and a value. Both the key and value are strings.
+         Data is an object but string coercion happens in order to adapt to situation,
+         and in this case it worked.
+         localStorage.setItem("hashKeyToBe", data.questions.length);
+
+         */
+  //        this.setInitialLS(data.questions.length);
+  //    });
+  //  }
+
+        // //Grabs questions and answer choices from server via an Ajax request and then sets the state.
+        // componentWillMount(){
+        //   $.ajax('/api/questions').done( data => {
+        //       this.setState(data);
+        //
+        //       /*
+        //       localStorage takes a key and a value. Both the key and value are strings.
+        //       Data is an object but string coercion happens in order to adapt to situation,
+        //       and in this case it worked.
+        //       localStorage.setItem("hashKeyToBe", data.questions.length);
+        //
+        //       */
+        //       this.setInitialLS(data.questions.length);
+        //   });
+        // }
 
   render() {
     return (
       <div id="">
-        <Questions questionState={this.state.questions} />
+        <Questions questionState={this.state.questions}/>
       </div>
     );
   }

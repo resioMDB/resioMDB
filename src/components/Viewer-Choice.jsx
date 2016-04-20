@@ -9,7 +9,15 @@ class Choice extends React.Component {
   submitAnswer(qIdentifier, choice) {
     let response = JSON.stringify({q: qIdentifier, choice: choice, allVotes: localStorage["changethis!!"]});
     socket.emit('viewerAnswer', response);
+
+    socket.on('updateLS', function(newChoiceArr) {
+      console.log("received");
+      var hashKeyToBe = "changethis!!";
+      localStorage.setItem(hashKeyToBe, newChoiceArr);
+    });
   }
+
+
   //In our render function, we check the question type. If thumbs, we populate with the Fontawesome thumb icon.
   //Otherwise, we just populate the question container with a button for each choice option.
   //Additionally, we have an onClick event that pushes the question ID and choice text to our
