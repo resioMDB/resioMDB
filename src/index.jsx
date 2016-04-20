@@ -26,9 +26,9 @@ ReactDOM.render(
   (
     <Router>
       <Redirect from="/" to="/splash" />
-      <Route name="Dashboard" path="/dash" component={Dashboard} />
+      <Route name="dash" path="/dash" component={Dashboard} />
       <Route name="CreateGraph" path="/create" component={CreateGraph} />
-      <Route name="Viewer" path="/viewer*" component={QuestionApp} hash={}/>
+      <Route name="Viewer" path="/viewer" component={QuestionApp} />
       <Route name="Splash" path="/splash" component={Splash} />
       <Route name="ThanksPage" path="/thanks" component={ThanksComponent} />
     </Router>
