@@ -4,9 +4,10 @@ const Poll = require('../models/pollSchema');
 
 // get questions from db based on url id and send it to Presenter Dashboard
 router.get('/:id', function(req, res) {
-	Poll.findOne({"_id" : req.params.id}, function(err, polls) {
-    res.send(polls);
-  });
+	console.log("looking for id", req.params.id, "in pollsRoute");
+	// Poll.findOne({"_id" : req.params.id}, function(err, polls) {
+  //   res.send(polls);
+  // });
 });
 
 // create schema and post into database with a generated id

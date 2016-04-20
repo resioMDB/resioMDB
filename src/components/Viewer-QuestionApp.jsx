@@ -2,6 +2,7 @@ import React from 'react';
 // import Questions from './Viewer-Questions.jsx';
 import ReactDOM from 'react-dom';
 import QuestionContainer from './Viewer-QuestionContainer.jsx';
+import axios from 'axios'
 import { Link } from 'react-router';
 const socket = io();
 
@@ -19,6 +20,19 @@ class QuestionApp extends React.Component {
     };
 
     var self = this;
+
+    axios.get('/polls/' + this.state.hash)
+      .then((data) => {
+      console.log("axios get request returned", data);
+    });
+    // $.ajax({
+    //   method: 'POST',
+    //   url: '/retrieve',
+    //   data: {hash: self.props.hash},
+    //   success: () => {
+    //     console.log("ajax succeeded");
+    //   }
+    // });
     socket.on('sendQuestions', (data) => {
       console.log("i've received questions:", data);
       self.setState({questions: data});
