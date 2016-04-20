@@ -6,7 +6,6 @@ const Poll = require('../models/pollSchema');
 router.get('/:id', function(req, res) {
 	Poll.findOne({"_id" : req.params.id}, function(err, polls) {
     if(err) console.error(err);
-    console.log(polls)
     res.send(polls);
   });
 });

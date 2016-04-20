@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const http = require('http').Server(app); // eslint-disable-line new-cap
 const io = require('socket.io')(http);
-const mockDB = require('./mockDB');
+
 mongoose.connect('mongodb://localhost/resiodb');
 
 
@@ -31,7 +31,6 @@ app.use(bodyParser.json());
 */
 // const QuestionSchema = require('./modules/questionSchema');
 //Don't need this? :const QuestionSchema = require('./modules/questionSchema');
-
 
 app.use('/polls', pollRoute);
 
@@ -63,7 +62,6 @@ io.on('connection', socket => {
 
     // dataObj = {q: question index, choice: new choice {string},
     //  allVotes: stringified array from local storage}
-
     var dataObj = JSON.parse(data);
     var presenterObj = {
       q: dataObj.q,
@@ -86,18 +84,10 @@ io.on('connection', socket => {
   });
 
   socket.on('getQuestions', (hash) => {
-    console.log("i've received hash:", hash);
-    console.log("i'm going to send:", mockDB[hash]);
     socket.emit('sendQuestions', mockDB[hash]);
   });
 });
 
-app.get('/api/questions', (req, res) => {
-//	var listOfQuestions = new Questions({
-//
-//	})
-  res.json(database);
-});
 
 //data is hard coded into the server for now
 //for the app to work, the data structure should be formatted as follows:
@@ -109,32 +99,6 @@ app.get('/api/questions', (req, res) => {
 //'qType' is used to determine whether the thumb graphic is used in Viewer-Choices.jsx
 //both Presenter-Dashboard.jsx and Viewer-QuestionApp.jsx make an ajax request to grab this data
 
-var database = {
- questions:
- [
-   { cType: 'bar',
-     question: 'Who has the coolest scratch project?',
-     choices: [{ Brandon: 0, Danny: 0, Masha: 0}],
-     qType: 'multiple'
-   },
-   { cType: 'pie',
-     question: 'What is your favorite beer?',
-     choices: [{ 'Stone IPA': 0, 'Corona Light': 0, 'Guiness': 0, 'Sierra Nevada': 0, 'Blue Moon': 0, "I don't drink beer, I drink bourbon": 0}],
-     qType: 'multiple'
-   },
-   {
-     cType: 'bar',
-     question: 'What was your favorite company that came to hiring day?',
-     choices: [{ 'Dog Vacay': 0, 'Dollar Shave Club': 0, 'LA Body Points': 0, Whisper: 0, Procore: 0, ESPN: 0, Ticketmaster: 0 }],
-     qType: 'multiple'
-   },
-   { cType: 'pie',
-     question: 'Thumbs Up or Thumbs Down on drinks last Thursday?',
-     choices: [{ Up: 0, Down: 0 }],
-     qType: 'thumbs'
-   }
- ]
-};
 
 //http is our server and therefore needs to be listening on a port
 http.listen(3000);

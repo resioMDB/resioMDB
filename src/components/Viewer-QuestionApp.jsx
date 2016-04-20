@@ -1,5 +1,9 @@
 import React from 'react';
-import Questions from './Viewer-Questions.jsx';
+// import Questions from './Viewer-Questions.jsx';
+import ReactDOM from 'react-dom';
+import QuestionContainer from './Viewer-QuestionContainer.jsx';
+import axios from 'axios';
+import { Link } from 'react-router';
 const socket = io();
 
 //This is the top level component for the viewer and holds state for all of the questions pulled from the server api.
@@ -12,28 +16,35 @@ class QuestionApp extends React.Component {
     super(props);
     this.state = {
       questions: [],
-      hash: this.props.routes[0].hash
+      hash: this.props.location.query.id
     };
 
     var self = this;
-    socket.on('sendQuestions', (data) => {
-      console.log("i've received questions:", data);
-      self.setState({questions: data});
-      self.setInitialLS(data.questions.length);
+
+    axios.get('/polls/' + this.state.hash)
+      .then((response) => {
+        self.setState({questions: response.data.questions});
+        self.setInitialLS(this.state.questions.length);
     });
-
-
-    // Doesn't work here!!!
-    // socket.on('updateLS', function(newChoiceArr) {
-    //   var hashKeyToBe = "changethis!!";
-    //   localStorage.setItem(hashKeyToBe, newChoiceArr);
+    // $.ajax({
+    //   method: 'POST',
+    //   url: '/retrieve',
+    //   data: {hash: self.props.hash},
+    //   success: () => {
+    //     console.log("ajax succeeded");
+    //   }
+    // });
+    // socket.on('sendQuestions', (data) => {
+    //   console.log("i've received questions:", data);
+    //   self.setState({questions: data});
+    //   self.setInitialLS(this.state.questions.length);
     // });
   }
 
 
   submitAnswer(qIdentifier, choice) {
     console.log("called in QApp with", qIdentifier, choice);
-    let response = JSON.stringify({q: qIdentifier, choice: choice, allVotes: localStorage["changethis!!"]});
+    let response = JSON.stringify({q: qIdentifier, choice: choice, allVotes: localStorage[this.state.hash]});
     socket.emit('viewerAnswer', response);
   }
 
@@ -43,15 +54,16 @@ class QuestionApp extends React.Component {
   //
   //  hashKeyToBe is hard-coded in for now. Should come from URL(?)
   setInitialLS(length) {
-    var hashKeyToBe = "changethis!!";
-    localStorage.setItem(hashKeyToBe, JSON.stringify(new Array(length)));
+    localStorage.setItem(this.state.hash, JSON.stringify(new Array(length)));
   }
 
    componentWillMount(){
-     console.log(this);
-     console.log("where i'm looking", this.props.routes[0].hash);
-     console.log("trying to emit", this.state.hash);
-     socket.emit('getQuestions', this.state.hash);
+     axios.get('/polls/' + this.state.hash)
+       .then((response) => {
+         console.log("i've received questions:", response);
+         this.setState({questions: response.data.questions});
+         this.setInitialLS(this.state.questions.length);
+     });
    }
 
          /*
@@ -82,9 +94,16 @@ class QuestionApp extends React.Component {
         // }
 
   render() {
+    const questions = this.state.questions.map((question, i) => {
+      return <QuestionContainer key= {i} qIdentifier={i} question={question} hash={this.state.hash}/>
+    });
+
     return (
       <div id="">
-        <Questions questionState={this.state.questions}/>
+        {questions}
+        <div className="text-center col-md-4 col-md-offset-4">
+          <Link to="/thanks"><button className="btn start">Finish Poll</button></Link>
+        </div>
       </div>
     );
   }

@@ -23,10 +23,9 @@ class CreateGraph extends React.Component{
   }
 
   publishCharts() {
-    console.log(this.state.queuedQuestions)
-    // axios.post('/polls/create', this.state.queuedQuestions).then( (response) => {
-    //   this.setState({id: response.data._id});
-    // });
+    axios.post('/polls/create', this.state.queuedQuestions).then( (response) => {
+      this.setState({id: response.data._id});
+    });
     this.setState({questions: this.state.queuedQuestions, showComponents: false})
   }
 
@@ -48,5 +47,3 @@ class CreateGraph extends React.Component{
 }
 
 export default CreateGraph;
-
-

@@ -29,27 +29,20 @@ class Dashboard extends React.Component{
 
 
     });
-    this.test = this.test.bind(this);
   }
 
   //make a call to the server to grab the questions
   //set those questions as the state and send them down to the next component
   componentWillMount() {
     axios.get('/polls/' + this.props.location.query.id).then( (response) => {
-      console.log(response.data.questions);
       this.setState({questions : response.data.questions});
     });
   }
 
-  test() {
-    console.log(this.state);
-  }
-
   render () {
-        console.log(this.props.location.query.id);
     return (
       <div>
-        <h1 className="go-local">Go to localhost:3000/#/viewers/{this.props.location.query.id}</h1>
+        <h1 className="go-local">Go to localhost:3000/#/viewer?id={this.props.location.query.id}</h1>
         <h1 className="go-local">Poll your votes:</h1>
         <Graphs questions={this.state.questions} />
       </div>
