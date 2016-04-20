@@ -25,6 +25,8 @@ class Dashboard extends React.Component{
       self.state.questions[parsedData.q].choices[0][newChoice]++;
       
       self.setState(self.state);
+		
+	
     });
   }
 
