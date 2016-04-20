@@ -8,7 +8,7 @@ import { BarChart, PieChart } from 'react-d3';
 class CreateGraph extends React.Component{
   constructor(props) {
     super(props);
-    this.state = {questions: []}
+    this.state = {graph: ''}
 
     //needed to retain the value of 'this' because it's within the socket callback
     //we change a value in the 'choices' array based on an event called 'serverResponse'
@@ -27,22 +27,38 @@ class CreateGraph extends React.Component{
     choice[this.refs.answer1.value] = 0;
     choice[this.refs.answer2.value] = 0;
     choice[this.refs.answer3.value] = 0;
-
+    choice[this.refs.answer4.value] = 0;
+    choice[this.refs.answer5.value] = 0;
+    var test = $(evt.target).parent().parent().parent().children('.chart-options-overlay').css({'background-color': '#FF5A5F', visibility: 'visible', 'z-index': 20});
+    console.log(test);
+    var type = this.state.graph === 'chart-options-bar-overlay' ? 'bar' : 'pie';
     var questions = [{
-                      cType: 'bar', question: this.refs.question.value,
+                      cType: type, question: this.refs.question.value,
                       choices: [choice],
                       qType: 'multiple'
                     }];
-
-    this.setState({questions});
+    this.props.getData(questions);
   }
 
   submitGraph(evt) {
-    console.log(this.state);
-    // evt.target.style.background = '#FF5A5F';
-    // if(this.state.currentSelection === 'chart-options-pie') {
-    //   $('.chart-options-bar').css({'background-color': 'white'});
-    // }
+    if(!this.state.graph) {
+      evt.target.style.background = '#FF5A5F';
+      this.setState({graph: evt.target.className});
+    }
+
+    if(evt.target.className === this.state.graph) {
+      return;
+    } else if(this.state.graph === 'chart-options-pie-overlay') {
+      $(evt.target).parent().find('.chart-options-pie-overlay').css('background-color', 'white');
+      $(evt.target).parent().find('.chart-options-bar-overlay').css('background-color', '#FF5A5F');
+      this.setState({graph: 'chart-options-bar-overlay'});
+    } else if(this.state.graph === 'chart-options-bar-overlay') {
+      $(evt.target).parent().find('.chart-options-bar-overlay').css('background-color', 'white');
+      $(evt.target).parent().find('.chart-options-pie-overlay').css('background-color', '#FF5A5F');
+      this.setState({graph: 'chart-options-pie-overlay'});
+    }
+
+
   }
 
   render () {
@@ -51,21 +67,27 @@ class CreateGraph extends React.Component{
 
     return (
       <div id='graphText'>
-        <h1 className="display-1">Select and Create Your Poll Here.</h1>
+        <div className="chart-options-overlay">
+          <h1>Chart Created.</h1>
+        </div>
         <div className="chart-options">
           <div className="chart-inputs">
             <form onSubmit={this.submitForm}>
-              <span>Title:</span><input ref="question" />
-              <span>Answer:</span><input ref="answer1" />
-              <span>Answer:</span><input ref="answer2" />
-              <span>Answer:</span><input ref="answer3" />
-              <button className="btn start" type='submit' value='submit'>Create</button>
+              <span>Title:</span><input className="form-control" ref="question" />
+              <span>Answer:</span><input className="form-control" ref="answer1" />
+              <span>Answer:</span><input className="form-control" ref="answer2" />
+              <span>Answer:</span><input className="form-control" ref="answer3" />
+              <span>Answer:</span><input className="form-control" ref="answer4" />
+              <span>Answer:</span><input className="form-control" ref="answer5" />
+              <button className="btn" type='submit' value='submit'>Create</button>
             </form>
           </div>
-          <div onClick={this.submitGraph} className="chart-options-pie">
+          <div onClick={this.submitGraph} className="chart-options-pie-overlay" />
+          <div  className="chart-options-pie">
             <PieChart data={pieData} width={300} height={300} radius={100} innerRadius={20} sectorBorderColor="white" title="Pie Chart" />
           </div>
-          <div onClick={this.submitGraph} className="chart-options-bar">
+          <div onClick={this.submitGraph} className="chart-options-bar-overlay" />
+          <div className="chart-options-bar">
             <BarChart data={barData} width={400} height={150} fill={'#3182bd'} title='Bar Chart'/>
           </div>
         </div>

@@ -11,7 +11,7 @@ import { BarChart, PieChart } from 'react-d3';
 class CreateGraph extends React.Component{
   constructor(props) {
     super(props);
-    this.state = {questions: []}
+    this.state = {questions: [], queuedQuestions: [], showComponents: true}
 
     //needed to retain the value of 'this' because it's within the socket callback
     //we change a value in the 'choices' array based on an event called 'serverResponse'
@@ -28,12 +28,15 @@ class CreateGraph extends React.Component{
     });
 
     this.getFormData = this.getFormData.bind(this);
+    this.publishCharts = this.publishCharts.bind(this);
   }
 
   getFormData(data) {
-    evt.preventDefault();
+    this.setState({queuedQuestions : this.state.queuedQuestions.concat(data)});
+  }
 
-    this.setState({questions : this.state.questions.concat(data)});
+  publishCharts() {
+    this.setState({questions: this.state.queuedQuestions, showComponents: false})
   }
 
   render () {
@@ -42,9 +45,13 @@ class CreateGraph extends React.Component{
 
     return (
       <div id='graphText'>
+        {!this.state.showComponents ? <h1 className="display-1">Polls:</h1> : ''}
         <Dashboard questions = {this.state.questions} />
-        <h1 className="display-1">Select and Create Your Poll Here.</h1>
-        <CreateComponent />
+        {this.state.showComponents ?  <button className="btn" onClick={this.publishCharts}>Publish Charts</button> : ''}
+        {this.state.showComponents ?  <h1 className="display-1">Select and Create Your Poll Here.</h1> : ''}
+        {this.state.showComponents ? <CreateComponent getData = {this.getFormData}/> : ''}
+        {this.state.showComponents ? <CreateComponent getData = {this.getFormData}/> : ''}
+        {this.state.showComponents ? <CreateComponent getData = {this.getFormData}/> : ''}
       </div>
     )
   }
