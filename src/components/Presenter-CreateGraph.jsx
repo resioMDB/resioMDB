@@ -26,7 +26,7 @@ class CreateGraph extends React.Component{
 
   publishCharts() {
     console.log(this.state.queuedQuestions);
-    axios.post('/polls', this.state.queuedQuestions);
+    axios.post('/polls/create', this.state.queuedQuestions);
     // this.setState({questions: this.state.queuedQuestions, showComponents: false})
   }
 

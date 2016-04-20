@@ -4,35 +4,44 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const app = express();
+const http = require('http').Server(app); // eslint-disable-line new-cap
+const io = require('socket.io')(http);
+const mockDB = require('./mockDB');
 mongoose.connect('mongodb://localhost/resiodb');
 
+
+//Routes
+const pollRoute = require('./routes/pollsRoute');
+
+app.use(express.static('client'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 //create an instance of an express application
-const app = express();
 
 //our express app will act as a handler to an http server - notice '.Server' method
-const http = require('http').Server(app); // eslint-disable-line new-cap
 
 /*
-	TO DO:
-	+ import the questions Schema
-	--GIVING ME CONNECTION OPEN ERROR?--
-	+ then input question object array into questionschema example
-	+ send this info to '/api/questions' with res.json(createdSchema);
+  TO DO:
+  + import the questions Schema
+  --GIVING ME CONNECTION OPEN ERROR?--
+  + then input question object array into questionschema example
+  + send this info to '/api/questions' with res.json(createdSchema);
 */
 // const QuestionSchema = require('./modules/questionSchema');
+//Don't need this? :const QuestionSchema = require('./modules/questionSchema');
+
+
+app.use('/polls', pollRoute);
 
 //require in socket.io
 //the html page also needs a script tag - see client/index.html
 //require in socket.io and pass the http server to it
 //the socket is now listening on our server
 //this triggers the 'connection' event that io listens for below
-const io = require('socket.io')(http);
 
-const mockDB = require('./mockDB');
 
-app.use(express.static('client'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}./../client/index.html`));
@@ -41,12 +50,6 @@ app.get('/', (req, res) => {
 app.get('/client/bundle.js', (req, res) => {
   res.sendFile(path.join(`${__dirname}./../client/bundle.js`));
 });
-
-app.post('/polls', (req, res) => {
-  console.log(req.body);
-});
-
-
 
 //when the server starts, io needs to listen for the 'connection' event
 //that event triggers a callback where it is common practice to name the parameter 'socket'
@@ -90,7 +93,6 @@ io.on('connection', socket => {
 });
 
 app.get('/api/questions', (req, res) => {
-	console.log()
 //	var listOfQuestions = new Questions({
 //
 //	})
