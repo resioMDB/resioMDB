@@ -8,15 +8,20 @@ class Choice extends React.Component {
 //and prepares the data that'll be sent over the socket back to the server.
   submitAnswer(qIdentifier, choice) {
     let self = this;
+
+    $.ajax({
+      method: 'POST',
+      url: '/retrieve',
+      data: {hash: self.props.hash},
+      success: () => {
+        console.log("ajax succeeded");
+      }
+    });
+
     let response = JSON.stringify({q: qIdentifier, choice: choice, allVotes: localStorage[this.props.hash]});
-    console.log("hash", this.props.hash);
-    console.log("loc", localStorage);
-    console.log("ls", localStorage[this.props.hash]);
-    console.log(response);
     socket.emit('viewerAnswer', response);
 
     socket.on('updateLS', function(newChoiceArr) {
-      console.log("trying to update");
       localStorage.setItem(self.props.hash, newChoiceArr);
     });
   }

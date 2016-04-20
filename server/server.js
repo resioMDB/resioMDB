@@ -4,6 +4,7 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const bodyParser = require('body-parser');
 mongoose.connect('mongodb://localhost/resiodb');
 //mongoose.connection.once('open', function() {
 //	console.log('Connected with resiodb')
@@ -16,10 +17,10 @@ const http = require('http').Server(app); // eslint-disable-line new-cap
 
 //Don't need this? :const QuestionSchema = require('./modules/questionSchema');
 
-const pollRoute = require('./Routes/pollRoute');
+// const pollRoute = require('./Routes/pollsRoute');
 
-app.use('/polls', pollRoute);
-
+// app.use('/polls', pollRoute);
+app.use(bodyParser());
 
 //require in socket.io
 //the html page also needs a script tag - see client/index.html
@@ -39,6 +40,12 @@ app.get('/', (req, res) => {
 app.get('/client/bundle.js', (req, res) => {
   res.sendFile(path.join(`${__dirname}./../client/bundle.js`));
 });
+
+app.post('/retrieve', (req, res) => {
+  console.log("running retrieve");
+  console.log("body", req.body);
+  res.end();
+})
 
 //when the server starts, io needs to listen for the 'connection' event
 //that event triggers a callback where it is common practice to name the parameter 'socket'
