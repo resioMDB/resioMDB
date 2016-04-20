@@ -55,7 +55,7 @@ class IndividualGraph extends React.Component{
 		}
 
     return (
-      <div id='graphText'>
+      <div id='graphText' className="d3-charts">
         {component}
       </div>
     );

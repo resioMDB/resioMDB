@@ -203,6 +203,64 @@ a:visited {
   height: 300px;
 }
 
+.publish {
+  color: #FF5A5F;
+  background: white;
+  margin-left: 168px;
+  border-color: #FF5A5F;
+  margin-top: 20px;
+  height: 50px;
+  width: 200px;
+  font-size: 25px;
+}
+
+.go-charts {
+  border: 10px white dashed;
+  height: 500px;
+  width: 1670px;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 280px;
+}
+
+.rd3-chart-title {
+  color: white !important;
+  font-size: 26px;
+}
+
+.d3-charts {
+  margin: 0 auto;
+  position: relative;
+  width: 50%;
+  margin-top: 50px;
+}
+
+.go-local {
+  background-color: white !important;
+  color: #FF5A5F !important;
+  width: 1000px;
+  margin-left: 50px;
+  margin-top: 50px;
+}
+
+a {
+  text-decoration: none;
+
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.h1-charts {
+  font-size: 150px;
+  margin-top: 140px;
+}
+
+.select-polls {
+  margin-left: 165px;
+}
+
 .fa {
   color: #FF5A5F;
 }

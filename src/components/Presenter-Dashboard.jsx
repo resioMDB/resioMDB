@@ -49,9 +49,9 @@ class Dashboard extends React.Component{
         console.log(this.props.location.query.id);
     return (
       <div>
-        <h1>localhost:3000/#/viewers/{this.props.location.query.id}</h1>
+        <h1 className="go-local">Go to localhost:3000/#/viewers/{this.props.location.query.id}</h1>
+        <h1 className="go-local">Poll your votes:</h1>
         <Graphs questions={this.state.questions} />
-        <button onClick={this.test}>press</button>
       </div>
     );
   }
