@@ -2,12 +2,26 @@
 const fs = require('fs'); // eslint-disable-line no-unused-vars
 const path = require('path');
 const express = require('express');
-
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+mongoose.connect('mongodb://localhost/resiodb');
+mongoose.connection.once('open', function() {
+	console.log('Connected with resiodb')
+});
 //create an instance of an express application
 const app = express();
 
 //our express app will act as a handler to an http server - notice '.Server' method
 const http = require('http').Server(app); // eslint-disable-line new-cap
+
+/* 
+	TO DO:
+	+ import the questions Schema
+	--GIVING ME CONNECTION OPEN ERROR?--
+	+ then input question object array into questionschema example
+	+ send this info to '/api/questions' with res.json(createdSchema);
+*/
+const QuestionSchema = require('./modules/questionSchema');
 
 //require in socket.io
 //the html page also needs a script tag - see client/index.html
@@ -70,6 +84,10 @@ io.on('connection', socket => {
 });
 
 app.get('/api/questions', (req, res) => {
+	console.log()
+//	var listOfQuestions = new Questions({
+//		
+//	})
   res.json(database);
 });
 
@@ -82,32 +100,33 @@ app.get('/api/questions', (req, res) => {
 //'choices' is an array of all possible choices - these will also be displayed
 //'qType' is used to determine whether the thumb graphic is used in Viewer-Choices.jsx
 //both Presenter-Dashboard.jsx and Viewer-QuestionApp.jsx make an ajax request to grab this data
-var database = {
-  questions:
-  [
-    { cType: 'bar',
-      question: 'Who has the coolest scratch project?',
-      choices: [{ Brandon: 0, Danny: 0, Masha: 0}],
-      qType: 'multiple'
-    },
-    { cType: 'pie',
-      question: 'What is your favorite beer?',
-      choices: [{ 'Stone IPA': 0, 'Corona Light': 0, 'Guiness': 0, 'Sierra Nevada': 0, 'Blue Moon': 0, "I don't drink beer, I drink bourbon": 0}],
-      qType: 'multiple'
-    },
-    {
-      cType: 'bar',
-      question: 'What was your favorite company that came to hiring day?',
-      choices: [{ 'Dog Vacay': 0, 'Dollar Shave Club': 0, 'LA Body Points': 0, Whisper: 0, Procore: 0, ESPN: 0, Ticketmaster: 0 }],
-      qType: 'multiple'
-    },
-    { cType: 'pie',
-      question: 'Thumbs Up or Thumbs Down on drinks last Thursday?',
-      choices: [{ Up: 0, Down: 0 }],
-      qType: 'thumbs'
-    }
-  ]
-};
+
+//var database = {
+//  questions:
+//  [
+//    { cType: 'bar',
+//      question: 'Who has the coolest scratch project?',
+//      choices: [{ Brandon: 0, Danny: 0, Masha: 0}],
+//      qType: 'multiple'
+//    },
+//    { cType: 'pie',
+//      question: 'What is your favorite beer?',
+//      choices: [{ 'Stone IPA': 0, 'Corona Light': 0, 'Guiness': 0, 'Sierra Nevada': 0, 'Blue Moon': 0, "I don't drink beer, I drink bourbon": 0}],
+//      qType: 'multiple'
+//    },
+//    {
+//      cType: 'bar',
+//      question: 'What was your favorite company that came to hiring day?',
+//      choices: [{ 'Dog Vacay': 0, 'Dollar Shave Club': 0, 'LA Body Points': 0, Whisper: 0, Procore: 0, ESPN: 0, Ticketmaster: 0 }],
+//      qType: 'multiple'
+//    },
+//    { cType: 'pie',
+//      question: 'Thumbs Up or Thumbs Down on drinks last Thursday?',
+//      choices: [{ Up: 0, Down: 0 }],
+//      qType: 'thumbs'
+//    }
+//  ]
+//};
 
 //http is our server and therefore needs to be listening on a port
 http.listen(3000);
