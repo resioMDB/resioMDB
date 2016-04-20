@@ -3,21 +3,36 @@ const fs = require('fs'); // eslint-disable-line no-unused-vars
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const bodyParser = require('body-parser');
-mongoose.connect('mongodb://localhost/resiodb');
-//mongoose.connection.once('open', function() {
-//	console.log('Connected with resiodb')
-//});
-//create an instance of an express application
 const app = express();
+const http = require('http').Server(app); // eslint-disable-line new-cap
+const io = require('socket.io')(http);
+const mockDB = require('./mockDB');
+
+mongoose.connect('mongodb://localhost/resiodb');
+
+
+//Routes
+const pollRoute = require('./routes/pollsRoute');
+
+app.use(express.static('client'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+//create an instance of an express application
 
 //our express app will act as a handler to an http server - notice '.Server' method
-const http = require('http').Server(app); // eslint-disable-line new-cap
 
+/*
+  TO DO:
+  + import the questions Schema
+  --GIVING ME CONNECTION OPEN ERROR?--
+  + then input question object array into questionschema example
+  + send this info to '/api/questions' with res.json(createdSchema);
+*/
+// const QuestionSchema = require('./modules/questionSchema');
 //Don't need this? :const QuestionSchema = require('./modules/questionSchema');
 
-// const pollRoute = require('./Routes/pollsRoute');
 
 // app.use('/polls', pollRoute);
 app.use(bodyParser());
@@ -27,11 +42,8 @@ app.use(bodyParser());
 //require in socket.io and pass the http server to it
 //the socket is now listening on our server
 //this triggers the 'connection' event that io listens for below
-const io = require('socket.io')(http);
 
-const mockDB = require('./mockDB');
 
-app.use(express.static('client'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}./../client/index.html`));
@@ -90,7 +102,6 @@ io.on('connection', socket => {
 });
 
 app.get('/api/questions', (req, res) => {
-	console.log()
 //	var listOfQuestions = new Questions({
 //
 //	})
@@ -107,7 +118,7 @@ app.get('/api/questions', (req, res) => {
 //'qType' is used to determine whether the thumb graphic is used in Viewer-Choices.jsx
 //both Presenter-Dashboard.jsx and Viewer-QuestionApp.jsx make an ajax request to grab this data
 
-//var database = {
+// var database = {
 //  questions:
 //  [
 //    { cType: 'bar',
@@ -132,7 +143,7 @@ app.get('/api/questions', (req, res) => {
 //      qType: 'thumbs'
 //    }
 //  ]
-//};
+// };
 
 //http is our server and therefore needs to be listening on a port
 http.listen(3000);
