@@ -63,4 +63,3 @@ class IndividualGraph extends React.Component{
 }
 
 export default IndividualGraph;
-

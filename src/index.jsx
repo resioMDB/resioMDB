@@ -21,13 +21,14 @@ class App extends React.Component {
 //Below is our config for React Router. All of the below routes are routes for our views. Our server
 //handles all of our api routes. React Router is taking care of linking between and rendering components
 //based on where the viewer is.
+//  **  requests to path /viewer will include hash for specific poll, eg. /viewer?=a73Kr3p
 ReactDOM.render(
   (
     <Router>
       <Redirect from="/" to="/splash" />
       <Route name="Dashboard" path="/dash" component={Dashboard} />
       <Route name="CreateGraph" path="/create" component={CreateGraph} />
-      <Route name="Viewer" path="/viewer" component={QuestionApp} />
+      <Route name="Viewer" path="/viewer*" component={QuestionApp} hash={}/>
       <Route name="Splash" path="/splash" component={Splash} />
       <Route name="ThanksPage" path="/thanks" component={ThanksComponent} />
     </Router>

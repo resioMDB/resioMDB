@@ -16,6 +16,8 @@ const http = require('http').Server(app); // eslint-disable-line new-cap
 //this triggers the 'connection' event that io listens for below
 const io = require('socket.io')(http);
 
+const mockDB = require('./mockDB');
+
 app.use(express.static('client'));
 
 app.get('/', (req, res) => {
@@ -35,7 +37,35 @@ app.get('/client/bundle.js', (req, res) => {
 //then the server emits the data via the 'serverResponse' event, which is heard by Presenter-Dashboard.jsx
 io.on('connection', socket => {
   socket.on('viewerAnswer', data => {
-    io.emit('serverResponse', data);
+
+    // dataObj = {q: question index, choice: new choice {string},
+    //  allVotes: stringified array from local storage}
+
+    var dataObj = JSON.parse(data);
+    var presenterObj = {
+      q: dataObj.q,
+      choice: dataObj.choice // new choice
+    }
+    //  parse allVotes into an array
+    //  the array index correspond to the question order on page
+    var votes = JSON.parse(dataObj.allVotes);
+
+    if (votes[dataObj.q] === dataObj.choice) {
+      return;
+    } else if (votes[dataObj.q] !== null) {
+      presenterObj.oldChoice = votes[dataObj.q];
+    }
+
+    votes[dataObj.q] = dataObj.choice;
+    io.emit('updatePresenter', JSON.stringify(presenterObj));
+    socket.emit('updateLS', JSON.stringify(votes));
+
+  });
+
+  socket.on('getQuestions', (hash) => {
+    console.log("i've received hash:", hash);
+    console.log("i'm going to send:", mockDB[hash]);
+    socket.emit('sendQuestions', mockDB[hash]);
   });
 });
 
@@ -57,7 +87,7 @@ var database = {
   [
     { cType: 'bar',
       question: 'Who has the coolest scratch project?',
-      choices: [{ Alex: 0, Daniel: 0, Dave: 0, Carlos: 0 }],
+      choices: [{ Brandon: 0, Danny: 0, Masha: 0}],
       qType: 'multiple'
     },
     { cType: 'pie',
