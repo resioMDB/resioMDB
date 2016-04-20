@@ -16,6 +16,8 @@ const http = require('http').Server(app); // eslint-disable-line new-cap
 //this triggers the 'connection' event that io listens for below
 const io = require('socket.io')(http);
 
+const mockDB = require('./mockDB');
+
 app.use(express.static('client'));
 
 app.get('/', (req, res) => {
@@ -58,6 +60,12 @@ io.on('connection', socket => {
     io.emit('updatePresenter', JSON.stringify(presenterObj));
     socket.emit('updateLS', JSON.stringify(votes));
 
+  });
+
+  socket.on('getQuestions', (hash) => {
+    console.log("i've received hash:", hash);
+    console.log("i'm going to send:", mockDB[hash]);
+    socket.emit('sendQuestions', mockDB[hash]);
   });
 });
 
