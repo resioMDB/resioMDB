@@ -14,14 +14,14 @@ const app = express();
 //our express app will act as a handler to an http server - notice '.Server' method
 const http = require('http').Server(app); // eslint-disable-line new-cap
 
-/* 
+/*
 	TO DO:
 	+ import the questions Schema
 	--GIVING ME CONNECTION OPEN ERROR?--
 	+ then input question object array into questionschema example
 	+ send this info to '/api/questions' with res.json(createdSchema);
 */
-const QuestionSchema = require('./modules/questionSchema');
+// const QuestionSchema = require('./modules/questionSchema');
 
 //require in socket.io
 //the html page also needs a script tag - see client/index.html
@@ -54,7 +54,7 @@ io.on('connection', socket => {
 
     // dataObj = {q: question index, choice: new choice {string},
     //  allVotes: stringified array from local storage}
-
+    console.log("data", data);
     var dataObj = JSON.parse(data);
     var presenterObj = {
       q: dataObj.q,
@@ -71,6 +71,7 @@ io.on('connection', socket => {
     }
 
     votes[dataObj.q] = dataObj.choice;
+    console.log("votes", votes);
     io.emit('updatePresenter', JSON.stringify(presenterObj));
     socket.emit('updateLS', JSON.stringify(votes));
 
@@ -86,9 +87,9 @@ io.on('connection', socket => {
 app.get('/api/questions', (req, res) => {
 	console.log()
 //	var listOfQuestions = new Questions({
-//		
+//
 //	})
-  res.json(database);
+  // res.json(database);
 });
 
 //data is hard coded into the server for now
