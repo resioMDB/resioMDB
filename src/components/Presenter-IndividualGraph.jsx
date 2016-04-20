@@ -29,7 +29,7 @@ class IndividualGraph extends React.Component{
 				var bar = {x: key, y: eachChoice[key]};
 				valueArray.push(bar);
 			}
-			var dataInfo = [{lable: 'Votes', values: valueArray}];
+			var dataInfo = [{label: 'Votes', values: valueArray}];
 
 			//see react-d3 docs for format
 			var component = <BarChart data={dataInfo} width={1000} height={200} fill={'#3182bd'} title={title} />
