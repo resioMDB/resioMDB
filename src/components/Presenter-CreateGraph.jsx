@@ -47,5 +47,3 @@ class CreateGraph extends React.Component{
 }
 
 export default CreateGraph;
-
-

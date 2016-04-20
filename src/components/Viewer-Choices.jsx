@@ -8,12 +8,12 @@ class Choices extends React.Component {
   render() {
     let choicesArray = [];
     if (this.props.qType === 'thumbs') {
-      choicesArray.push(<Choice key={0} qType={this.props.qType} qIdentifier={this.props.qIdentifier} qChoice={this.props.qChoice} />);
+      choicesArray.push(<Choice key={0} qType={this.props.qType} qIdentifier={this.props.qIdentifier} qChoice={this.props.qChoice} hash={this.props.hash} />);
     }
     else {
       let i = 0;
       for (var choiceText in this.props.qChoice){
-            choicesArray.push(<Choice key={i} qType={this.props.qType} qIdentifier={this.props.qIdentifier} cIdentifier={i} qChoice={choiceText} />);
+            choicesArray.push(<Choice key={i} qType={this.props.qType} qIdentifier={this.props.qIdentifier} cIdentifier={i} qChoice={choiceText} hash={this.props.hash}/>);
             i++;
       }
     }

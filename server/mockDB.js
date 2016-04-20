@@ -22,4 +22,13 @@ mockDB['asdfgh'] = [
   }
 ];
 
+mockDB['1293idkswldkalsd'] = [
+  {
+    cType: 'bar',
+    question: 'What is your favorite color?',
+    choices: [{ 'Red': 0, 'Green': 0, 'Blue': 0, Yellow: 0, Pink: 0 }],
+    qType: 'multiple'
+  }
+];
+
 module.exports = mockDB;

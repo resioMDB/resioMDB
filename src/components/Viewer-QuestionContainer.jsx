@@ -11,7 +11,7 @@ class QuestionContainer extends React.Component {
 //components. We define its props below.
 
       return (
-          <Choices key= {i} qType={this.props.question.qType} qIdentifier={this.props.qIdentifier} cIdentifier={i} qChoice={choice} />
+          <Choices key= {i} qType={this.props.question.qType} qIdentifier={this.props.qIdentifier} cIdentifier={i} qChoice={choice} hash={this.props.hash} />
       )
     });
 
