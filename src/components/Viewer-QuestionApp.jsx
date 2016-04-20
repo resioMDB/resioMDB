@@ -2,7 +2,7 @@ import React from 'react';
 // import Questions from './Viewer-Questions.jsx';
 import ReactDOM from 'react-dom';
 import QuestionContainer from './Viewer-QuestionContainer.jsx';
-import axios from 'axios'
+import axios from 'axios';
 import { Link } from 'react-router';
 const socket = io();
 
@@ -22,8 +22,10 @@ class QuestionApp extends React.Component {
     var self = this;
 
     axios.get('/polls/' + this.state.hash)
-      .then((data) => {
-      console.log("axios get request returned", data);
+      .then((response) => {
+        console.log("i've received questions:", response);
+        self.setState({questions: response.data.questions});
+        self.setInitialLS(this.state.questions.length);
     });
     // $.ajax({
     //   method: 'POST',
@@ -33,11 +35,11 @@ class QuestionApp extends React.Component {
     //     console.log("ajax succeeded");
     //   }
     // });
-    socket.on('sendQuestions', (data) => {
-      console.log("i've received questions:", data);
-      self.setState({questions: data});
-      self.setInitialLS(this.state.questions.length);
-    });
+    // socket.on('sendQuestions', (data) => {
+    //   console.log("i've received questions:", data);
+    //   self.setState({questions: data});
+    //   self.setInitialLS(this.state.questions.length);
+    // });
   }
 
 
@@ -57,7 +59,12 @@ class QuestionApp extends React.Component {
   }
 
    componentWillMount(){
-     socket.emit('getQuestions', this.state.hash);
+     axios.get('/polls/' + this.state.hash)
+       .then((response) => {
+         console.log("i've received questions:", response);
+         this.setState({questions: response.data.questions});
+         this.setInitialLS(this.state.questions.length);
+     });
    }
 
          /*

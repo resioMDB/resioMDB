@@ -17,7 +17,7 @@ const pollRoute = require('./routes/pollsRoute');
 
 app.use(express.static('client'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 
 //create an instance of an express application
 
@@ -34,8 +34,9 @@ app.use(bodyParser.json());
 //Don't need this? :const QuestionSchema = require('./modules/questionSchema');
 
 
-// app.use('/polls', pollRoute);
+
 app.use(bodyParser());
+app.use('/polls', pollRoute);
 
 //require in socket.io
 //the html page also needs a script tag - see client/index.html
