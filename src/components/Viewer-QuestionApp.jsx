@@ -23,7 +23,6 @@ class QuestionApp extends React.Component {
 
     axios.get('/polls/' + this.state.hash)
       .then((response) => {
-        console.log("i've received questions:", response);
         self.setState({questions: response.data.questions});
         self.setInitialLS(this.state.questions.length);
     });

@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const http = require('http').Server(app); // eslint-disable-line new-cap
 const io = require('socket.io')(http);
-const mockDB = require('./mockDB');
 
 mongoose.connect('mongodb://localhost/resiodb');
 
@@ -33,9 +32,6 @@ app.use(bodyParser.json());
 // const QuestionSchema = require('./modules/questionSchema');
 //Don't need this? :const QuestionSchema = require('./modules/questionSchema');
 
-
-
-app.use(bodyParser());
 app.use('/polls', pollRoute);
 
 //require in socket.io
@@ -54,12 +50,6 @@ app.get('/client/bundle.js', (req, res) => {
   res.sendFile(path.join(`${__dirname}./../client/bundle.js`));
 });
 
-app.post('/retrieve', (req, res) => {
-  console.log("running retrieve");
-  console.log("body", req.body);
-  res.end();
-})
-
 //when the server starts, io needs to listen for the 'connection' event
 //that event triggers a callback where it is common practice to name the parameter 'socket'
 //'.on' acts as an event listener - socket will only listen for events
@@ -72,7 +62,6 @@ io.on('connection', socket => {
 
     // dataObj = {q: question index, choice: new choice {string},
     //  allVotes: stringified array from local storage}
-    console.log("data", data);
     var dataObj = JSON.parse(data);
     var presenterObj = {
       q: dataObj.q,
@@ -89,25 +78,16 @@ io.on('connection', socket => {
     }
 
     votes[dataObj.q] = dataObj.choice;
-    console.log("votes", votes);
     io.emit('updatePresenter', JSON.stringify(presenterObj));
     socket.emit('updateLS', JSON.stringify(votes));
 
   });
 
   socket.on('getQuestions', (hash) => {
-    console.log("i've received hash:", hash);
-    console.log("i'm going to send:", mockDB[hash]);
     socket.emit('sendQuestions', mockDB[hash]);
   });
 });
 
-app.get('/api/questions', (req, res) => {
-//	var listOfQuestions = new Questions({
-//
-//	})
-  // res.json(database);
-});
 
 //data is hard coded into the server for now
 //for the app to work, the data structure should be formatted as follows:
@@ -119,32 +99,6 @@ app.get('/api/questions', (req, res) => {
 //'qType' is used to determine whether the thumb graphic is used in Viewer-Choices.jsx
 //both Presenter-Dashboard.jsx and Viewer-QuestionApp.jsx make an ajax request to grab this data
 
-// var database = {
-//  questions:
-//  [
-//    { cType: 'bar',
-//      question: 'Who has the coolest scratch project?',
-//      choices: [{ Brandon: 0, Danny: 0, Masha: 0}],
-//      qType: 'multiple'
-//    },
-//    { cType: 'pie',
-//      question: 'What is your favorite beer?',
-//      choices: [{ 'Stone IPA': 0, 'Corona Light': 0, 'Guiness': 0, 'Sierra Nevada': 0, 'Blue Moon': 0, "I don't drink beer, I drink bourbon": 0}],
-//      qType: 'multiple'
-//    },
-//    {
-//      cType: 'bar',
-//      question: 'What was your favorite company that came to hiring day?',
-//      choices: [{ 'Dog Vacay': 0, 'Dollar Shave Club': 0, 'LA Body Points': 0, Whisper: 0, Procore: 0, ESPN: 0, Ticketmaster: 0 }],
-//      qType: 'multiple'
-//    },
-//    { cType: 'pie',
-//      question: 'Thumbs Up or Thumbs Down on drinks last Thursday?',
-//      choices: [{ Up: 0, Down: 0 }],
-//      qType: 'thumbs'
-//    }
-//  ]
-// };
 
 //http is our server and therefore needs to be listening on a port
 http.listen(3000);

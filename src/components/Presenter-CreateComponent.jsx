@@ -29,8 +29,11 @@ class CreateGraph extends React.Component{
     choice[this.refs.answer3.value] = 0;
     choice[this.refs.answer4.value] = 0;
     choice[this.refs.answer5.value] = 0;
-    var test = $(evt.target).parent().parent().parent().children('.chart-options-overlay').css({'background-color': '#FF5A5F', visibility: 'visible', 'z-index': 20});
-    console.log(test);
+
+    delete choice[''];
+
+    $(evt.target).parent().parent().parent().children('.chart-options-overlay').css({'background-color': '#FF5A5F', visibility: 'visible', 'z-index': 20});
+
     var type = this.state.graph === 'chart-options-bar-overlay' ? 'bar' : 'pie';
     var questions = [{
                       cType: type, question: this.refs.question.value,
