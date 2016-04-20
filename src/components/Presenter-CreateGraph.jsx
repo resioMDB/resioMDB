@@ -37,7 +37,7 @@ class CreateGraph extends React.Component{
     return (
       <div id='graphText'>
         {!this.state.showComponents ? <h1 className="display-1">Polls:</h1> : ''}
-        {this.state.showComponents ? <Link to={{ pathname: 'dash', query: { id: 'asdasdasdas' } }}><button onClick={this.publishCharts} className="btn">Publish Charts</button></Link>: ''}
+        {this.state.showComponents ? <Link to={{ pathname: 'dash', query: { id: '5717f6131d38a8c33dcd2d4d' } }}><button onClick={this.publishCharts} className="btn">Publish Charts</button></Link>: ''}
         {this.state.showComponents ?  <h1 className="display-1">Select and Create Your Poll Here.</h1> : ''}
         {this.state.showComponents ? <CreateComponent getData = {this.getFormData}/> : ''}
         {this.state.showComponents ? <CreateComponent getData = {this.getFormData}/> : ''}

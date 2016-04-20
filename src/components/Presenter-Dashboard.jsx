@@ -1,6 +1,7 @@
 import React from 'react';
 import Graphs from './Presenter-Graphs.jsx';
 import {Link} from 'react-router';
+import axios from 'axios';
 const socket = io();
 
 class Dashboard extends React.Component{
@@ -33,11 +34,12 @@ class Dashboard extends React.Component{
 
   //make a call to the server to grab the questions
   //set those questions as the state and send them down to the next component
-  // componentWillMount() {
-  //   $.ajax('/api/questions').done( data => {
-  //     this.setState(data);
-  //   })
-  // }
+  componentWillMount() {
+    axios.get('/polls/' + this.props.location.query.id, data => {
+      console.log(data)
+      // this.setState(data);
+    })
+  }
 
   test() {
     console.log(this.state);
