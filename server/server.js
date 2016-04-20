@@ -17,7 +17,7 @@ const pollRoute = require('./routes/pollsRoute');
 
 app.use(express.static('client'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 
 //create an instance of an express application
 
